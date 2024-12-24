@@ -1,0 +1,156 @@
+
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1:3306
+-- Generation Time: Dec 03, 2024 at 10:07 AM
+-- Server version: 9.1.0
+-- PHP Version: 8.3.14
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `moviedb`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `actors`
+--
+
+DROP TABLE IF EXISTS `actors`;
+CREATE TABLE IF NOT EXISTS `actors` (
+  `idActors` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`idActors`),
+  UNIQUE KEY `idActors` (`idActors`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `actors`
+--
+
+INSERT INTO `actors` (`idActors`, `name`) VALUES
+(3, 'Alden Ehrenreich'),
+(4, 'Josh Hutcherson'),
+(6, 'Aaron Eckhart'),
+(7, 'Kaya Scodelario'),
+(9, 'Leonardo DiCaprio');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `directors`
+--
+
+DROP TABLE IF EXISTS `directors`;
+CREATE TABLE IF NOT EXISTS `directors` (
+  `idDirectors` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`idDirectors`),
+  UNIQUE KEY `idDirectors` (`idDirectors`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `directors`
+--
+
+INSERT INTO `directors` (`idDirectors`, `name`) VALUES
+(1, 'Aleksander Bach'),
+(2, 'Bobby Farrelly'),
+(3, 'Kenneth Branagh'),
+(4, 'Larry Charles'),
+(5, 'Zal Batmanglij');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `genre`
+--
+
+DROP TABLE IF EXISTS `genre`;
+CREATE TABLE IF NOT EXISTS `genre` (
+  `idGenre` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `genre` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `idMovie` int UNSIGNED NOT NULL,
+  PRIMARY KEY (`idGenre`),
+  UNIQUE KEY `idGenre` (`idGenre`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `genre`
+--
+
+INSERT INTO `genre` (`idGenre`, `genre`, `idMovie`) VALUES
+(1, 'Adventure', 0),
+(2, 'Crime', 0),
+(3, 'Drama', 0),
+(4, 'Fantasy', 0),
+(5, 'Romance', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `movies`
+--
+
+DROP TABLE IF EXISTS `movies`;
+CREATE TABLE IF NOT EXISTS `movies` (
+  `idMovie` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `idActors` int UNSIGNED NOT NULL,
+  `idGenre` int UNSIGNED DEFAULT NULL,
+  `idDirectors` int UNSIGNED DEFAULT NULL,
+  `releaseDate` date NOT NULL,
+  `budget` decimal(17,0) NOT NULL,
+  `boxofficeRevenue` decimal(17,0) NOT NULL,
+  PRIMARY KEY (`idMovie`),
+  UNIQUE KEY `idMovie` (`idMovie`),
+  UNIQUE KEY `idActors` (`idActors`,`idGenre`),
+  UNIQUE KEY `idDirectors` (`idDirectors`),
+  KEY `idGenre` (`idGenre`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `movies`
+--
+
+INSERT INTO `movies` (`idMovie`, `title`, `idActors`, `idGenre`, `idDirectors`, `releaseDate`, `budget`, `boxofficeRevenue`) VALUES
+(1, 'Batman v Superman: Dawn of Justice', 3, 1, NULL, '2016-03-19', 250000000, 872700000),
+(2, 'Blended', 4, 2, NULL, '2014-05-23', 40000000, 128000000),
+(3, 'Beasts of the Southern Wild', 6, 3, NULL, '2012-06-27', 1800000, 21900000),
+(4, 'Beyond the Lights', 7, 4, NULL, '2014-09-06', 100000000, 41400000),
+(5, 'Guns', 9, 5, NULL, '2013-08-02', 61000000, 131900000);
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `directors`
+--
+ALTER TABLE `directors`
+  ADD CONSTRAINT `directors_ibfk_1` FOREIGN KEY (`idDirectors`) REFERENCES `directors` (`idDirectors`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `movies`
+--
+ALTER TABLE `movies`
+  ADD CONSTRAINT `movies_ibfk_1` FOREIGN KEY (`idActors`) REFERENCES `actors` (`idActors`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `movies_ibfk_2` FOREIGN KEY (`idDirectors`) REFERENCES `directors` (`idDirectors`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `movies_ibfk_3` FOREIGN KEY (`idGenre`) REFERENCES `genre` (`idGenre`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

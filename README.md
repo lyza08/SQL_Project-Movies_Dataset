@@ -1,0 +1,1 @@
+This Dataset contains information related to movie, including Actors, Directors, Genre, movies, releasedate. It is structured across multiple tables, each representing a different aspect of the movie data
